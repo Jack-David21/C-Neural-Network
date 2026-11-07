@@ -1,0 +1,58 @@
+from layers import Conv2D, MaxPool2D, Flatten, Dense, ReLU
+
+class Sequential:
+    def __init__(self, layers):
+        self.layers = layers
+
+    def forward(self, x):
+        for layer in self.layers:
+            x = layer.forward(x)
+        return x
+
+    def backward(self, dout):
+        for layer in reversed(self.layers):         
+            dout = layer.backward(dout)
+        return dout
+
+    def params(self):
+        return [pg for layer in self.layers for pg in layer.params()]
+
+class SGD:
+    def __init__(self, model, lr):
+        self.model = model
+        self.lr = lr
+
+    def step(self):
+        for p, g in self.model.params():            
+            p -= self.lr * g                        
+
+def build_baseline(hidden=256, seed=0):
+    return Sequential([
+        Dense(784, hidden, seed=seed),
+        ReLU(),
+        Dense(hidden, 10, seed=seed + 1),
+    ])
+
+def build_cnn(head="A", seed=0):
+    if head not in ("A", "B"):
+        raise ValueError("head must be 'A' or 'B'")
+    layers = [
+        Conv2D(1, 16, k=3, stride=1, pad=1, seed=seed),
+        ReLU(),
+        MaxPool2D(k=2),
+        Conv2D(16, 32, k=3, stride=1, pad=1, seed=seed + 1),
+        ReLU(),
+        MaxPool2D(k=2),
+        Flatten(),
+    ]
+
+    if head == "A":
+        layers.append(Dense(1568, 10, seed=seed + 2))
+    else:
+        layers += [
+            Dense(1568, 128, seed=seed + 2),
+            ReLU(),
+            Dense(128, 10, seed=seed + 3),
+        ]
+
+    return Sequential(layers)
