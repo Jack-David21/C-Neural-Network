@@ -1,11 +1,14 @@
+from pathlib import Path
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 from confusion_val import predict
-from evaluate_test import load_weights
-from model import build_cnn
+from model import build_cnn, load_weights
 from preprocess import CLASSES
-from train import DATA
+from train import DATA, WEIGHTS
+
+FIGURES = Path(__file__).parent / "figures"
 
 
 def grid(X, idx, title, path, rows=3, cols=8):
@@ -24,18 +27,19 @@ def grid(X, idx, title, path, rows=3, cols=8):
 def main():
     d = np.load(DATA)
     X_val, y_val = d["X_val"], d["y_val"].astype(np.int64)
-    model = load_weights(build_cnn("B"), "cnn_B_best.npz")
+    model = load_weights(build_cnn("B"), WEIGHTS / "cnn_B_best.npz")
     pred = predict(model, X_val)
     cid = {c: i for i, c in enumerate(CLASSES)}
 
     for t, p in [("firetruck", "ambulance"), ("ambulance", "firetruck"), ("tractor", "bulldozer")]:
         idx = np.where((y_val == cid[t]) & (pred == cid[p]))[0]
         grid(X_val, idx, f"true {t}, predicted {p} ({len(idx)} in total)",
-             f"errors_{t}_as_{p}.png")
+             FIGURES / f"errors_{t}_as_{p}.png")
 
     for t in ("firetruck", "ambulance"):
         idx = np.where((y_val == cid[t]) & (pred == cid[t]))[0]
-        grid(X_val, idx, f"true {t}, predicted correctly", f"correct_{t}.png")
+        grid(X_val, idx, f"true {t}, predicted correctly",
+             FIGURES / f"correct_{t}.png")
     print("saved 5 png files")
 
 

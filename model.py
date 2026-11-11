@@ -1,3 +1,5 @@
+import numpy as np
+
 from layers import Conv2D, MaxPool2D, Flatten, Dense, ReLU
 
 class Sequential:
@@ -70,3 +72,14 @@ def build_cnn_stacked(seed=0):
         Dense(1568, 128, seed=seed + 4), ReLU(),
         Dense(128, 10, seed=seed + 5),
     ])
+
+def load_weights(model, path):
+    """Copy the saved arrays (arr_0, arr_1, ...) into the model, in params() order."""
+    with np.load(path) as f:
+        saved = [f[f"arr_{i}"] for i in range(len(f.files))]
+    params = model.params()
+    assert len(saved) == len(params), "weight file does not match this model"
+    for (p, _), w in zip(params, saved):
+        assert p.shape == w.shape, "weight shape mismatch"
+        p[...] = w
+    return model

@@ -9,6 +9,7 @@ from losses import SoftmaxCrossEntropy
 from model import SGD, build_baseline, build_cnn, build_cnn_stacked
 
 DATA = Path(__file__).parent / "Processed" / "quickdraw_vehicles_5000.npz"
+WEIGHTS = Path(__file__).parent / "weights"
 
 
 def prepare(xb, flatten=True):
@@ -108,14 +109,15 @@ if __name__ == "__main__":
     aug = len(sys.argv) > 4 and sys.argv[4] == "aug"
     tag = ("" if seed == 0 else f"_s{seed}") + ("_aug" if aug else "")
     if choice == "baseline":
-        train(epochs=epochs, seed=seed, augment=aug, save_path=f"baseline{tag}_best.npz")
+        train(epochs=epochs, seed=seed, augment=aug,
+              save_path=WEIGHTS / f"baseline{tag}_best.npz")
     elif choice in ("A", "B"):
         train(build_fn=lambda seed: build_cnn(choice, seed), flatten=False,
               epochs=epochs, seed=seed, augment=aug,
-              save_path=f"cnn_{choice}{tag}_best.npz")
+              save_path=WEIGHTS / f"cnn_{choice}{tag}_best.npz")
     elif choice == "C":
         train(build_fn=build_cnn_stacked, flatten=False,
               epochs=epochs, seed=seed, augment=aug,
-              save_path=f"cnn_C{tag}_best.npz")
+              save_path=WEIGHTS / f"cnn_C{tag}_best.npz")
     else:
         raise SystemExit("usage: python train.py [baseline|A|B|C] [epochs] [seed] [aug]")

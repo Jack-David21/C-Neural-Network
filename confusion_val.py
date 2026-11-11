@@ -1,17 +1,19 @@
 import sys
+from pathlib import Path
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-from evaluate_test import load_weights
-from model import build_cnn, build_cnn_stacked
+from model import build_cnn, build_cnn_stacked, load_weights
 from preprocess import CLASSES
-from train import DATA, prepare
+from train import DATA, WEIGHTS, prepare
+
+FIGURES = Path(__file__).parent / "figures"
 
 MODELS = {
-    "B": (lambda: build_cnn("B"), "cnn_B_best.npz"),
-    "C": (build_cnn_stacked, "cnn_C_best.npz"),
-    "Baug": (lambda: build_cnn("B"), "cnn_B_aug_best.npz"),
+    "B": (lambda: build_cnn("B"), WEIGHTS / "cnn_B_best.npz"),
+    "C": (build_cnn_stacked, WEIGHTS / "cnn_C_best.npz"),
+    "Baug": (lambda: build_cnn("B"), WEIGHTS / "cnn_B_aug_best.npz"),
 }
 K = len(CLASSES)
 
@@ -77,8 +79,9 @@ def main():
                     color="white" if shade[i, j] > shade.max() / 2 else "black")
     fig.colorbar(im, label="mistakes")
     fig.tight_layout()
-    fig.savefig(f"confusion_val_{key}.png", dpi=150)
-    print(f"\nsaved confusion_val_{key}.png")
+    path = FIGURES / f"confusion_val_{key}.png"
+    fig.savefig(path, dpi=150)
+    print(f"\nsaved {path}")
 
 
 if __name__ == "__main__":

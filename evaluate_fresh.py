@@ -2,18 +2,16 @@ from pathlib import Path
 
 import numpy as np
 
-from evaluate_test import load_weights
 from losses import SoftmaxCrossEntropy
-from model import build_baseline, build_cnn, build_cnn_stacked
-from train import DATA, evaluate
+from model import build_baseline, build_cnn, load_weights
+from train import DATA, WEIGHTS, evaluate
 
 FRESH = DATA.parent / "quickdraw_vehicles_fresh_test.npz"
 
 RUNS = [
-    ("baseline",    build_baseline,           True,  "baseline_best.npz"),
-    ("B",           lambda: build_cnn("B"),   False, "cnn_B_best.npz"),
-    ("B + augment", lambda: build_cnn("B"),   False, "cnn_B_aug_best.npz"),
-    ("C + augment", build_cnn_stacked,        False, "cnn_C_aug_best.npz"),
+    ("baseline",    build_baseline,           True,  WEIGHTS / "baseline_best.npz"),
+    ("B",           lambda: build_cnn("B"),   False, WEIGHTS / "cnn_B_best.npz"),
+    ("B + augment", lambda: build_cnn("B"),   False, WEIGHTS / "cnn_B_aug_best.npz"),
 ]
 
 
