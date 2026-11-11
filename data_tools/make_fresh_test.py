@@ -8,7 +8,7 @@ from train import DATA
 PER_CLASS = 1000
 SEED = 2026
 OUT = DATA.parent / "quickdraw_vehicles_fresh_test.npz"
-DATASET = Path(__file__).parent / "Dataset"
+DATASET = Path(__file__).resolve().parents[1] / "Dataset"
 
 
 def main():

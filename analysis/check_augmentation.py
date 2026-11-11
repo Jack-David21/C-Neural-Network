@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from train import DATA, augment_batch
 
-FIGURES = Path(__file__).parent / "figures"
+FIGURES = Path(__file__).resolve().parents[1] / "figures"
 
 
 def main():

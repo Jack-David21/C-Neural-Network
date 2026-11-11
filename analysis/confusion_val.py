@@ -8,7 +8,7 @@ from model import build_cnn, build_cnn_stacked, load_weights
 from preprocess import CLASSES
 from train import DATA, WEIGHTS, prepare
 
-FIGURES = Path(__file__).parent / "figures"
+FIGURES = Path(__file__).resolve().parents[1] / "figures"
 
 MODELS = {
     "B": (lambda: build_cnn("B"), WEIGHTS / "cnn_B_best.npz"),

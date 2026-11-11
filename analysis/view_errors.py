@@ -3,12 +3,12 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-from confusion_val import predict
+from analysis.confusion_val import predict
 from model import build_cnn, load_weights
 from preprocess import CLASSES
 from train import DATA, WEIGHTS
 
-FIGURES = Path(__file__).parent / "figures"
+FIGURES = Path(__file__).resolve().parents[1] / "figures"
 
 
 def grid(X, idx, title, path, rows=3, cols=8):
