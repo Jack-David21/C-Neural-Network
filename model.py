@@ -56,3 +56,17 @@ def build_cnn(head="A", seed=0):
         ]
 
     return Sequential(layers)
+
+def build_cnn_stacked(seed=0):
+    """Two 3x3 convs before each pool (28x28 -> 14x14 -> 7x7), then head B."""
+    return Sequential([
+        Conv2D(1, 16, seed=seed), ReLU(),
+        Conv2D(16, 16, seed=seed + 1), ReLU(),
+        MaxPool2D(k=2),
+        Conv2D(16, 32, seed=seed + 2), ReLU(),
+        Conv2D(32, 32, seed=seed + 3), ReLU(),
+        MaxPool2D(k=2),
+        Flatten(),
+        Dense(1568, 128, seed=seed + 4), ReLU(),
+        Dense(128, 10, seed=seed + 5),
+    ])
