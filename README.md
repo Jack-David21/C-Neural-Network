@@ -1,4 +1,5 @@
 # CNN from scratch (NumPy only): Quick, Draw! vehicles
+New to CNNs? Read [GUIDE.md](GUIDE.md) for a plain-language explanation of CNNs and of every step in this project.
 
 A convolutional neural network that classifies 28×28 doodles of ten vehicles, written with **only NumPy**. Every forward and backward pass is implemented by hand: no PyTorch, TensorFlow, autograd or scikit-learn.
 
